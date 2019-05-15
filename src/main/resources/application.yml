@@ -1,0 +1,29 @@
+spring:
+  batch:
+    initialize-schema: always
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    type: com.zaxxer.hikari.HikariDataSource
+    url: jdbc:postgresql://localhost:5432/coolbros
+    jdbcUrl: ${spring.datasource.url}
+    username: postgres
+    password: ${spring.datasource.username}  
+  jpa:
+     hibernate:
+         ddl-auto: update
+         format_sql: true
+         generate_statistics: false
+         jdbc:
+             batch_size: 5
+             batch_versioned_data: true
+         show_sql: true
+     properties:
+         hibernate:
+             temp:
+                 use_jdbc_metadata_defaults: false
+
+app:
+   dir: ${user.home}/.csv-import-to-db
+   csv-dir: ${user.home}/tmp/
+   bros-filename: bros.csv
+   friends-filename: friends.csv
