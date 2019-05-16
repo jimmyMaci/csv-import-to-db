@@ -13,12 +13,12 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class ApplicationProperties {
 
-    String dir;
-    
-    String csvDir;
+	String dir;
 
-    String brosFileName;
+	String csvDir;
 
-    String friendsFileName;
+	String brosFileName;
+
+	String friendsFileName;
 
 }

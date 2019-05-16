@@ -22,7 +22,7 @@ public class CsvToDatabaseJobExecutionListener implements JobExecutionListener {
 
 	@Override
 	public void afterJob(JobExecution jobExecution) {
-		log.info("afterJob");		
+		log.info("afterJob");
 	}
 
 }

@@ -10,7 +10,6 @@ import org.springframework.batch.item.ItemProcessor;
 import org.springframework.batch.item.database.JpaItemWriter;
 import org.springframework.batch.item.file.FlatFileItemReader;
 import org.springframework.batch.item.file.FlatFileParseException;
-import org.springframework.batch.item.file.transform.DelimitedLineTokenizer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.FileSystemResource;
@@ -19,7 +18,6 @@ import org.springframework.transaction.PlatformTransactionManager;
 import de.alpharogroup.csvtodb.entity.FriendsEntity;
 import de.alpharogroup.csvtodb.mapper.FriendsEntityMapper;
 import de.alpharogroup.migration.dto.FriendDto;
-import de.alpharogroup.reflection.ReflectionExtensions;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -45,10 +43,7 @@ public class CsvFileToFriendsStepConfiguration {
 
 	@Bean
 	public FlatFileItemReader<FriendDto> friendsReader() {
-		DelimitedLineTokenizer delimitedLineTokenizer = new DelimitedLineTokenizer(";");
-		delimitedLineTokenizer.setNames(ReflectionExtensions.getDeclaredFieldNames(FriendDto.class));
-		return SpringBatchObjectFactory.newFlatFileItemReader(friendsResource(), delimitedLineTokenizer,
-				FriendDto.class);
+		return SpringBatchObjectFactory.newCsvFileItemReader(friendsResource(), FriendDto.class, ";");
 	}
 
 	@Bean
@@ -59,14 +54,14 @@ public class CsvFileToFriendsStepConfiguration {
 	@Bean
 	public ItemProcessor<FriendDto, FriendsEntity> friendsProcessor() {
 
-		ItemProcessor<FriendDto, FriendsEntity> processor = new ItemProcessor<FriendDto, FriendsEntity>(){
+		ItemProcessor<FriendDto, FriendsEntity> processor = new ItemProcessor<FriendDto, FriendsEntity>() {
 
 			@Override
 			public FriendsEntity process(FriendDto item) throws Exception {
 				FriendsEntity entity = Mappers.getMapper(FriendsEntityMapper.class).mapToEntity(item);
 				return entity;
 			}
-			
+
 		};
 		return processor;
 	}

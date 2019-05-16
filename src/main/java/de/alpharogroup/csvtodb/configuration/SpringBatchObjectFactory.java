@@ -13,36 +13,37 @@ import org.springframework.batch.item.file.mapping.DefaultLineMapper;
 import org.springframework.batch.item.file.transform.DelimitedLineTokenizer;
 import org.springframework.core.io.Resource;
 
+import de.alpharogroup.reflection.ReflectionExtensions;
 import lombok.experimental.UtilityClass;
 
 @UtilityClass
 public class SpringBatchObjectFactory {
 
-    private static final String READER_SUFFIX = "Reader";
+	private static final String READER_SUFFIX = "Reader";
 
-    public static <T> FlatFileItemReader<T> newFlatFileItemReader(Resource resource, DelimitedLineTokenizer delimitedLineTokenizer, Class<T> typeClass) {
-    	DefaultLineMapper<T> lineMapper = new DefaultLineMapper<>();
-    	BeanWrapperFieldSetMapper<T> fieldSetMapper = new BeanWrapperFieldSetMapper<T>();
-    	fieldSetMapper.setTargetType(typeClass);
-        lineMapper.setFieldSetMapper(fieldSetMapper);
-        lineMapper.setLineTokenizer(delimitedLineTokenizer);
-        return new FlatFileItemReaderBuilder<T>()
-                .name(typeClass.getSimpleName() + READER_SUFFIX)
-                .resource(resource)
-                .lineMapper(lineMapper)
-                .linesToSkip(1)
-                .build();
-    }
+	public static <T> FlatFileItemReader<T> newCsvFileItemReader(Resource resource, Class<T> typeClass,
+			String delimiter) {
 
-    public static <T> JpaItemWriter<T> newJpaItemWriter(EntityManagerFactory entityManagerFactory){
-        JpaItemWriter<T> writer = new JpaItemWriter<>();
-        writer.setEntityManagerFactory(entityManagerFactory);
-        return writer;
-    }
+		DefaultLineMapper<T> lineMapper = new DefaultLineMapper<>();
+		BeanWrapperFieldSetMapper<T> fieldSetMapper = new BeanWrapperFieldSetMapper<>();
+		DelimitedLineTokenizer delimitedLineTokenizer = new DelimitedLineTokenizer(delimiter);
+		delimitedLineTokenizer.setNames(ReflectionExtensions.getDeclaredFieldNames(typeClass));
+		fieldSetMapper.setTargetType(typeClass);
+		lineMapper.setFieldSetMapper(fieldSetMapper);
+		lineMapper.setLineTokenizer(delimitedLineTokenizer);
+		return new FlatFileItemReaderBuilder<T>().name(typeClass.getSimpleName() + READER_SUFFIX).resource(resource)
+				.lineMapper(lineMapper).linesToSkip(1).build();
+	}
 
+	public static <T> JpaItemWriter<T> newJpaItemWriter(EntityManagerFactory entityManagerFactory) {
+		JpaItemWriter<T> writer = new JpaItemWriter<>();
+		writer.setEntityManagerFactory(entityManagerFactory);
+		return writer;
+	}
 
-    public static <T> T getTargetEntity(EntityManager entityManager, Class<T> entityClass, Supplier<T> newEntitySupplier) {
-        return newEntitySupplier.get();
-    }
+	public static <T> T getTargetEntity(EntityManager entityManager, Class<T> entityClass,
+			Supplier<T> newEntitySupplier) {
+		return newEntitySupplier.get();
+	}
 
 }
