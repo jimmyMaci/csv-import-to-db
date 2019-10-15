@@ -1,4 +1,6 @@
 spring:
+  main:
+    web-application-type: none
   batch:
     initialize-schema: always
   datasource:
@@ -24,6 +26,6 @@ spring:
 
 app:
    dir: ${user.home}/.csv-import-to-db
-   csv-dir: ${user.home}/tmp/
+   csv-dir: ${app.dir}
    bros-filename: bros.csv
    friends-filename: friends.csv

@@ -2,6 +2,8 @@ package de.alpharogroup.csvtodb.configuration;
 
 import javax.persistence.EntityManagerFactory;
 
+import de.alpharogroup.migration.dto.BroDto;
+import de.alpharogroup.spring.batch.factory.SpringBatchObjectFactory;
 import org.mapstruct.factory.Mappers;
 import org.springframework.batch.core.Step;
 import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;
@@ -15,7 +17,6 @@ import org.springframework.transaction.PlatformTransactionManager;
 
 import de.alpharogroup.csvtodb.entity.BrosEntity;
 import de.alpharogroup.csvtodb.mapper.BrosEntityMapper;
-import de.alpharogroup.migration.dto.BroDto;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -41,7 +42,7 @@ public class CsvFileToBrosStepConfiguration {
 
 	@Bean
 	public FlatFileItemReader<BroDto> brosReader() {
-		return SpringBatchObjectFactory.newCsvFileItemReader(brosResource(), BroDto.class, ";");
+		return SpringBatchObjectFactory.newCsvFileItemReader(brosResource(), BroDto.class, ";", 1);
 	}
 
 	@Bean

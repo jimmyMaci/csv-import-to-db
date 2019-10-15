@@ -3,6 +3,7 @@ package de.alpharogroup.csvtodb.configuration;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.PersistenceException;
 
+import de.alpharogroup.spring.batch.factory.SpringBatchObjectFactory;
 import org.mapstruct.factory.Mappers;
 import org.springframework.batch.core.Step;
 import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;
@@ -43,7 +44,8 @@ public class CsvFileToFriendsStepConfiguration {
 
 	@Bean
 	public FlatFileItemReader<FriendDto> friendsReader() {
-		return SpringBatchObjectFactory.newCsvFileItemReader(friendsResource(), FriendDto.class, ";");
+		return SpringBatchObjectFactory
+			.newCsvFileItemReader(friendsResource(), FriendDto.class, ";", 1);
 	}
 
 	@Bean

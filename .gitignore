@@ -85,3 +85,4 @@
 /.gradle
 /gradle
 /pom.xml.bak
+/.idea/$PRODUCT_WORKSPACE_FILE$
